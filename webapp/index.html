@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html dir="ltr" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Login</title>
+
+<!--- js --->
+<script type="text/javascript" src="resources/scripts/jquery/jquery-2.1.4.js"></script>
+<script type="text/javascript"> 
+
+    /*回车事件*/
+	function EnterPress(e){ //传入 event 
+		var e = e || window.event; 
+		if(e.keyCode == 13){ 
+			$("#submitForm").submit();
+		} 
+	} 
+    
+ </script>
+
+<!--- CSS --->
+<link href="resources/style/login/login_css.css" rel="stylesheet" type="text/css" />
+
+
+
+<!--- Javascript libraries (jQuery and Selectivizr) used for the custom checkbox --->
+
+<!--[if (gte IE 6)&(lte IE 8)]>
+		<script type="text/javascript" src="scripts/selectivizr.js"></script>
+		<noscript><link rel="stylesheet" href="style/login/fallback.css" /></noscript>
+	<![endif]-->
+
+</head>
+
+<body>
+	<div id="container">
+		<form action="login" id="submitForm" method="post">
+			<div class="login">LOGIN</div>
+			<div class="username-text">Username:</div>
+			<div class="password-text">Password:</div>
+			<div class="username-field">
+				<input type="text" name="username" value="" />
+			</div>
+			<div class="password-field">
+				<input type="password" name="password" value=""
+					onkeypress="EnterPress(event)" onkeydown="EnterPress()" />
+			</div>
+			<input type="checkbox" name="remember-me" id="remember-me" /><label
+				for="remember-me">Remember me</label>
+			<div class="forgot-usr-pwd">
+				Forgot <a href="#">username</a> or <a href="#">password</a>?
+			</div>
+			<input type="submit" name="submit" value="GO" />
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+
+
+</script>
+</html>

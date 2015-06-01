@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:context="http://www.springframework.org/schema/context" 
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+    <!-- 声明注解 -->
+  <!-- 隐式地向 Spring 容器注册AutowiredAnnotationBeanPostProcessor、CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor 
+  以及equiredAnnotationBeanPostProcessor 这 4 个 BeanPostProcessor。 -->
+         <context:annotation-config/>
+            
+ <!-- 配置数据源-->  
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+    <property name="driverClassName">  
+        <value>org.gjt.mm.mysql.Driver</value>  
+    </property>  
+    <property name="url">  
+        <value>jdbc:mysql://localhost:3306/mycloud?useUnicode=true&amp;characterEncoding=UTF-8</value>  
+    </property>  
+    <property name="username">  
+        <value>root</value>  
+    </property>  
+    <property name="password">  
+        <value>root</value>  
+    </property>  
+</bean>  
+
+<!-- SpingUtil配置，为了getBean方法 -->
+<bean id="springUtil" class="org.cloud.utils.SpringUtil"/>
+
+<!-- 整合ibatis -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+    <property name="dataSource" ref="jdbcDataSource" />  
+    <property name="configLocation" value="classpath:core/mybatis-config.xml"></property>  
+</bean> 
+
+  <bean id="sqlSession"     class="org.mybatis.spring.SqlSessionTemplate">   
+       <constructor-arg index="0" ref="sqlSessionFactory" />   
+ </bean>  
+
+ <bean id="baseDaoImpl" class="org.cloud.core.mybatis.dao.impl.BaseDaoImpl">  
+  <!--注入SqlSessionTemplate实例 -->  
+  <property name="sqlSessionTemplate" ref="sqlSession" />  
+ </bean>  
+ 
+ <!-- DAO Bean设置 -->
+ <bean id="usersDaoImpl" class="org.cloud.core.mybatis.dao.impl.UsersDaoImpl" parent="baseDaoImpl"/>
+ 
+ <!-- Service Bean配置 -->
+ <bean id="usersServiceImpl" class="org.cloud.core.service.impl.UsersServiceImpl">
+    	<property name="usersDaoImpl" ref="usersDaoImpl"/>
+  </bean>
+
+</beans>
