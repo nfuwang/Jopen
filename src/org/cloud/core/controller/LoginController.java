@@ -25,12 +25,16 @@ public class LoginController {
 
 	//登录动作执行
     @RequestMapping(value="/login",method = RequestMethod.POST)
-    public String login(@RequestParam String username,@RequestParam String password){
+    @ResponseBody
+    public Map login(@RequestParam String username,@RequestParam String password){
     	String userPasswd = usersService.getPasswdByName(username);
+    	Map map = new HashMap();
+    	map.put("row1","hello");
+    	map.put("row2","world");
     	if(userPasswd.equals(password)){
-    		return "welcome";
+    		return map;
     	}
-        return "index";
+		return null;
     }
     
     //获取人员信息

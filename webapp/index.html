@@ -9,15 +9,19 @@
 <script type="text/javascript" src="resources/scripts/jquery/jquery-2.1.4.js"></script>
 <script type="text/javascript"> 
 
-    /*回车事件*/
-	function EnterPress(e){ //传入 event 
-		var e = e || window.event; 
-		if(e.keyCode == 13){ 
-			$("#submitForm").submit();
-		} 
-	} 
-    
- </script>
+	$(document).ready(function() {
+
+
+		$("#submit").bind("click", logIn);
+
+		$("#password").keydown(function() {
+			if (event.keyCode == 13) {
+				logIn();
+			}
+		});
+	});
+
+</script>
 
 <!--- CSS --->
 <link href="resources/style/login/login_css.css" rel="stylesheet" type="text/css" />
@@ -40,22 +44,44 @@
 			<div class="username-text">Username:</div>
 			<div class="password-text">Password:</div>
 			<div class="username-field">
-				<input type="text" name="username" value="" />
+				<input id="username" type="text" name="username" value="" />
 			</div>
 			<div class="password-field">
-				<input type="password" name="password" value=""
-					onkeypress="EnterPress(event)" onkeydown="EnterPress()" />
+				<input id="password" type="password" name="password" value=""
+					onkeypress="enterPress(event)" onkeydown="enterPress()" />
 			</div>
 			<input type="checkbox" name="remember-me" id="remember-me" /><label
 				for="remember-me">Remember me</label>
 			<div class="forgot-usr-pwd">
 				Forgot <a href="#">username</a> or <a href="#">password</a>?
 			</div>
-			<input type="submit" name="submit" value="GO" />
+			<input  type="button"  id="submit" name="submit" value="GO" />
 		</form>
 	</div>
 </body>
 <script type="text/javascript">
+
+function logIn(nonce) {
+    if ($("#username").val() == "") {
+        return;
+    }
+    if ($("#password").val() == "") {
+    	return;
+    }
+    $.ajax({
+        url: "login",
+        type: "POST",
+        datatype: "JSON",
+        data: "username=" + $("#username").val() + "&password=" + $("#password").val(),
+        success: function(result) {
+        	alert(result.row2);
+            var pageurl = "views/welcome.htm";
+            //document.location = pageurl;
+           // alert(window.location);
+        }
+    });
+}
+
 
 
 </script>

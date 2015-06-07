@@ -223,7 +223,7 @@ input[type="checkbox"]:not(:checked):hover + label, input[type="checkbox"]:not(:
 	text-decoration: underline;
 }
 
-input[type="submit"] {
+input[type="button"] {
 	width: 95px;
 	height: 73px;
 	float: left;
