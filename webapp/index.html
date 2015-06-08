@@ -74,10 +74,11 @@ function logIn(nonce) {
         datatype: "JSON",
         data: "username=" + $("#username").val() + "&password=" + $("#password").val(),
         success: function(result) {
-        	alert(result.row2);
-            var pageurl = "views/welcome.htm";
+        	alert(window.location.href);
+            var pageurl = "views/welcome.html";
             //document.location = pageurl;
            // alert(window.location);
+            window.location.href=pageurl;
         }
     });
 }
