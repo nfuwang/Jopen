@@ -5,9 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.cloud.core.service.impl.UsersServiceImpl;
 import org.cloud.utils.SpringUtil;
+import org.cloud.utils.SystemParameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,12 +31,14 @@ public class LoginController {
 	//登录动作执行
     @RequestMapping(value="/login",method = RequestMethod.POST)
     @ResponseBody
-    public Map login(@RequestParam String username,@RequestParam String password){
+    public Map login(@RequestParam String username,@RequestParam String password,HttpServletRequest request){
     	String userPasswd = usersService.getPasswdByName(username);
     	Map map = new HashMap();
     	map.put("row1","hello");
     	map.put("row2","world");
     	if(userPasswd.equals(password)){
+    		HttpSession session = request.getSession();
+    		session.setAttribute(SystemParameter.LOGIN_SESSION_NAME, username);
     		return map;
     	}
 		return null;

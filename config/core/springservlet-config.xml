@@ -25,12 +25,23 @@
     <!-- 自动扫描controller包中的控制器 -->
     <context:component-scan base-package="org.cloud.core.controller"/>
 
+  <!--  配置mvc的拦截器 可以配置多个 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--  需要被拦截的路径 -->
+            <mvc:mapping path="/views/**" />
+            <!-- 拦截处理的interceptor -->
+            <bean class="org.cloud.interceptor.LoginInterceptor">
+           </bean>
+      </mvc:interceptor>
+    </mvc:interceptors>
+    
     <!-- 视图解析路径配置 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
        <property name="contentType" value="text/html"/>        
        <property name="prefix" value="/views/"/>
-       <property name="suffix" value=".html"/>
+       <property name="suffix" value=".jsp"/>
     </bean>
     
     <!-- Json转换器配置 -->
