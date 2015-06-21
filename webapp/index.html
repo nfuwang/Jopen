@@ -74,7 +74,7 @@ function logIn(nonce) {
         datatype: "JSON",
         data: "username=" + $("#username").val() + "&password=" + $("#password").val(),
         success: function(result) {
-            var pageurl = "views/welcome.html";
+            var pageurl = "views/main.jsp";
             //document.location = pageurl;
            // alert(window.location);
             window.location.href=pageurl;
