@@ -1,0 +1,45 @@
+/* Resets */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;padding: 0;border: 0;outline: 0;font-weight: inherit;font-style: inherit;font-size: 100%;font-family: inherit;vertical-align: baseline;}
+:focus {outline: 0;}
+body {color: #2f332a;font: 15px/21px Arial, Helvetica, simsun, sans-serif;background: #528036 url(../img/background.jpg) no-repeat fixed 0 0;}
+p {padding-bottom: 20px;}
+ol, ul {list-style: none;}
+ul.list {list-style-type: upper-latin;}
+table {border-collapse: separate;border-spacing: 0;}
+caption, th, td {text-align: left;font-weight: normal;}
+strong {font-weight: bold;}
+em {font-style: italic;}
+hr {display: none;}
+.font1 {color: white;background-color: #528036;}
+.right {float: right;}
+.left {float: left;}
+.hide {display: none;}
+.round {-moz-border-radius: 15px;-webkit-border-radius: 15px;-khtml-border-radius: 15px;border-radius: 15px;}
+.clear {clear: both;}
+.clearfix {display: block;}
+.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
+html[xmlns] .clearfix {display: block;}
+* html .clearfix {height: 1%;}
+
+/* Link Styles */
+a {color: #528036;}
+a:link, a:visited {text-decoration: none;}
+a:hover {color: #000;text-decoration: none;}
+a:active {text-decoration: none;}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {color: #2f332a;font-weight: bold;font-family: Helvetica, Arial, simsun, sans-serif;padding-bottom: 5px;}
+h1 {font-size: 36px;line-height: 44px;}
+h2 {font-size: 20px;line-height: 20px;}
+h3 {font-size: 14px;line-height: 14px;}
+h4 {font-size: 14px;font-weight: normal;line-height: 25px;}
+
+/* Wraps */
+.header_wrap {position: relative;min-width: 940px;padding: 100px 30px 0 30px;}
+.content_wrap {position: relative;min-width: 940px;padding: 0 0 0 0}
+
+.demoContent {width: 940px;}
+.demoContent .right {float: left;padding: 0px;width: 0px;}
+.demoContent .left {float: center;padding: 0px;}
+.demoContent iframe {width:600px;min-height: 530px;}

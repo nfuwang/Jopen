@@ -4,12 +4,13 @@
 	<TITLE>  </TITLE>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<!-- <link rel="stylesheet" href="../resources/style/demo.css" type="text/css"> -->
-	<link rel="stylesheet" href="../resources/style/zTreeStyle.css" type="text/css">
+	<link rel="stylesheet" href="../resources/style/zTreeStyleForDemo.css" type="text/css">
+		<link rel="stylesheet" href="../resources/style/common.css" type="text/css">
+		<link rel="stylesheet" href="../resources/style/demo.css" type="text/css">
 	<!-- <link rel="stylesheet" href="../resources/style/tree.css" type="text/css"> -->
 	<script type="text/javascript" src="../resources/scripts/jquery/jquery-2.1.4.js"></script>
 	<script type="text/javascript" src="../resources/scripts/jquery.ztree.core-3.5.js"></script>
-	<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck-3.5.js"></script>
-	  <script type="text/javascript" src="../../../js/jquery.ztree.exedit-3.5.js"></script>-->
+	<script type="text/javascript" src="../resources/scripts/demo.js"></script>
 <SCRIPT type="text/javascript">
 //KVM host 图标URL
 var host_KVM_img = "../resources/images/tree/rs_hst_kvm.png";
@@ -17,125 +18,95 @@ var host_KVM_img = "../resources/images/tree/rs_hst_kvm.png";
 var guest_lin_img = "../resources/images/tree/rs_gst_lin.png";
 //Windows guest 图标URL
 var guest_win_img = "../resources/images/tree/rs_gst_win.png";
+		var menu_nodes =[
+		             	{id:1, pId:0, name:"[core] 基本功能 演示", open:false},
+		             	{id:101, pId:1, name:"最简单的树 --  标准 JSON 数据", icon:host_KVM_img, file:"core/standardData"},
+		             	{id:102, pId:1, name:"最简单的树 --  简单 JSON 数据", iconSkin:"menu", file:"core/simpleData"},
+		             	{id:103, pId:1, name:"不显示 连接线", iconSkin:"menu", file:"core/noline"},
+		             	{id:104, pId:1, name:"不显示 节点 图标", iconSkin:"menu", file:"core/noicon"},
+		             	{id:105, pId:1, name:"自定义图标 --  icon 属性", iconSkin:"menu", file:"core/custom_icon"},
+		             	{id:106, pId:1, name:"自定义图标 --  iconSkin 属性", iconSkin:"menu", file:"core/custom_iconSkin"},
+		             	{id:107, pId:1, name:"自定义字体", iconSkin:"menu", file:"core/custom_font"},
+		             	{id:115, pId:1, name:"超链接演示", iconSkin:"menu", file:"core/url"},
+		             	{id:108, pId:1, name:"异步加载 节点数据", iconSkin:"menu", file:"core/async"},
+		             	{id:109, pId:1, name:"用 zTree 方法 异步加载 节点数据", iconSkin:"menu", file:"core/async_fun"},
+		             	{id:110, pId:1, name:"用 zTree 方法 更新 节点数据", iconSkin:"menu", file:"core/update_fun"},
+		             	{id:111, pId:1, name:"单击 节点 控制", iconSkin:"menu", file:"core/click"},
+		             	{id:112, pId:1, name:"展开 / 折叠 父节点 控制", iconSkin:"menu", file:"core/expand"},
+		             	{id:113, pId:1, name:"根据 参数 查找 节点", iconSkin:"menu", file:"core/searchNodes"},
+		             	{id:114, pId:1, name:"其他 鼠标 事件监听", iconSkin:"menu", file:"core/otherMouse"},
 
-		var curMenu = null, zTree_Menu = null;
-		var setting = {
-			view: {
-				showLine: true,
-				selectedMulti: false,
-				dblClickExpand: false
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				onNodeCreated: this.onNodeCreated,
-				beforeClick: this.beforeClick,
-				onClick: this.onClick
-			}
-		};
+		             	{id:2, pId:0, name:"[excheck] 复/单选框功能 演示", open:false},
+		             	{id:201, pId:2, name:"Checkbox 勾选操作", iconSkin:"menu", file:"excheck/checkbox"},
+		             	{id:206, pId:2, name:"Checkbox nocheck 演示", iconSkin:"menu", file:"excheck/checkbox_nocheck"},
+		             	{id:207, pId:2, name:"Checkbox chkDisabled 演示", iconSkin:"menu", file:"excheck/checkbox_chkDisabled"},
+		             	{id:208, pId:2, name:"Checkbox halfCheck 演示", iconSkin:"menu", file:"excheck/checkbox_halfCheck"},
+		             	{id:202, pId:2, name:"Checkbox 勾选统计", iconSkin:"menu", file:"excheck/checkbox_count"},
+		             	{id:203, pId:2, name:"用 zTree 方法 勾选 Checkbox", iconSkin:"menu", file:"excheck/checkbox_fun"},
+		             	{id:204, pId:2, name:"Radio 勾选操作", iconSkin:"menu", file:"excheck/radio"},
+		             	{id:209, pId:2, name:"Radio nocheck 演示", iconSkin:"menu", file:"excheck/radio_nocheck"},
+		             	{id:210, pId:2, name:"Radio chkDisabled 演示", iconSkin:"menu", file:"excheck/radio_chkDisabled"},
+		             	{id:211, pId:2, name:"Radio halfCheck 演示", iconSkin:"menu", file:"excheck/radio_halfCheck"},
+		             	{id:205, pId:2, name:"用 zTree 方法 勾选 Radio", iconSkin:"menu", file:"excheck/radio_fun"},
+		             	{id:212, pId:2, name:"", blank:true},
+		             	{id:213, pId:2, name:"", blank:true},
+		             	{id:214, pId:2, name:"", blank:true},
+		             	{id:215, pId:2, name:"", blank:true},
 
-		var zNodes =[
-			{ id:1, pId:0, name:"首页", open:true},
-			{ id:11, pId:1, name:"使用一览",icon:host_KVM_img},
-			{ id:111, pId:11, name:"叶子节点 1-1-1"},
-			/* { id:112, pId:11, name:"叶子节点 1-1-2"},
-			{ id:113, pId:11, name:"叶子节点 1-1-3"},
-			{ id:114, pId:11, name:"叶子节点 1-1-4"}, */
-			/* { id:12, pId:1, name:"子菜单 1-2"},
-			{ id:121, pId:12, name:"叶子节点 1-2-1"},
-			{ id:122, pId:12, name:"叶子节点 1-2-2"},
-			{ id:123, pId:12, name:"叶子节点 1-2-3"},
-			{ id:124, pId:12, name:"叶子节点 1-2-4"}, */
-			{ id:2, pId:0, name:"虚拟机管理"},
-			{ id:21, pId:2, name:"Host1", icon:host_KVM_img},
-			{ id:211, pId:21, name:"Guest1", icon:guest_lin_img},
-			{ id:212, pId:21, name:"Guest2", icon:guest_lin_img},
-			{ id:213, pId:21, name:"Guest3", icon:guest_lin_img},
-			{ id:214, pId:21, name:"Guest4", icon:guest_lin_img},
-			{ id:22, pId:2, name:"Host2", icon:host_KVM_img},
-			{ id:221, pId:22, name:"Guest1", icon:guest_win_img},
-			{ id:222, pId:22, name:"Guest2", icon:guest_win_img},
-			{ id:223, pId:22, name:"Guest3", icon:guest_win_img},
-			{ id:224, pId:22, name:"Guest4", icon:guest_win_img},
-			{ id:3, pId:0, name:"系统管理"},
-			{ id:31, pId:3, name:"用户管理"},
-			{ id:311, pId:31, name:"叶子节点 3-1-1"},
-			{ id:312, pId:31, name:"叶子节点 3-1-2"},
-			{ id:313, pId:31, name:"叶子节点 3-1-3"},
-			{ id:314, pId:31, name:"叶子节点 3-1-4"},
-			{ id:32, pId:3, name:"权限管理"},
-			{ id:321, pId:32, name:"叶子节点 3-2-1"},
-			{ id:322, pId:32, name:"叶子节点 3-2-2"},
-			{ id:323, pId:32, name:"叶子节点 3-2-3"},
-			{ id:324, pId:32, name:"叶子节点 3-2-4"}			
-		];
+		             	{id:3, pId:0, name:"[exedit] 编辑功能 演示", open:false},
+		             	{id:301, pId:3, name:"拖拽 节点 基本控制", iconSkin:"menu", file:"exedit/drag"},
+		             	{id:302, pId:3, name:"拖拽 节点 高级控制", iconSkin:"menu", file:"exedit/drag_super"},
+		             	{id:303, pId:3, name:"用 zTree 方法 移动 / 复制 节点", iconSkin:"menu", file:"exedit/drag_fun"},
+		             	{id:304, pId:3, name:"基本 增 / 删 / 改 节点", iconSkin:"menu", file:"exedit/edit"},
+		             	{id:305, pId:3, name:"高级 增 / 删 / 改 节点", iconSkin:"menu", file:"exedit/edit_super"},
+		             	{id:306, pId:3, name:"用 zTree 方法 增 / 删 / 改 节点", iconSkin:"menu", file:"exedit/edit_fun"},
+		             	{id:307, pId:3, name:"异步加载 & 编辑功能 共存", iconSkin:"menu", file:"exedit/async_edit"},
+		             	{id:308, pId:3, name:"多棵树之间 的 数据交互", iconSkin:"menu", file:"exedit/multiTree"},
+		             	{id:309, pId:3, name:"", blank:true},
+		             	{id:310, pId:3, name:"", blank:true},
+		             	{id:311, pId:3, name:"", blank:true},
+		             	{id:312, pId:3, name:"", blank:true},
+		             	{id:313, pId:3, name:"", blank:true},
+		             	{id:314, pId:3, name:"", blank:true},
+		             	{id:315, pId:3, name:"", blank:true},
 
-		function beforeClick(treeId, node) {
-			if (node.isParent) {
-				if (node.level === 0) {
-					var pNode = curMenu;
-					while (pNode && pNode.level !==0) {
-						pNode = pNode.getParentNode();
-					}
-					if (pNode !== node) {
-						var a = $("#" + pNode.tId + "_a");
-						a.removeClass("cur");
-						zTree_Menu.expandNode(pNode, false);
-					}
-					a = $("#" + node.tId + "_a");
-					a.addClass("cur");
+		             	{id:4, pId:0, name:"大数据量 演示", open:false},
+		             	{id:401, pId:4, name:"一次性加载大数据量", iconSkin:"menu", file:"bigdata/common"},
+		             	{id:402, pId:4, name:"分批异步加载大数据量", iconSkin:"menu", file:"bigdata/diy_async"},
+		             	{id:403, pId:4, name:"分页加载大数据量", iconSkin:"menu", file:"bigdata/page"},
+		             	{id:404, pId:4, name:"", blank:true},
+		             	{id:405, pId:4, name:"", blank:true},
+		             	{id:406, pId:4, name:"", blank:true},
+		             	{id:407, pId:4, name:"", blank:true},
+		             	{id:408, pId:4, name:"", blank:true},
+		             	{id:409, pId:4, name:"", blank:true},
+		             	{id:410, pId:4, name:"", blank:true},
+		             	{id:411, pId:4, name:"", blank:true},
+		             	{id:412, pId:4, name:"", blank:true},
+		             	{id:413, pId:4, name:"", blank:true},
+		             	{id:414, pId:4, name:"", blank:true},
+		             	{id:415, pId:4, name:"", blank:true},
 
-					var isOpen = false;
-					for (var i=0,l=node.children.length; i<l; i++) {
-						if(node.children[i].open) {
-							isOpen = true;
-							break;
-						}
-					}
-					if (isOpen) {
-						zTree_Menu.expandNode(node, true);
-						curMenu = node;
-					} else {
-						zTree_Menu.expandNode(node.children[0].isParent?node.children[0]:node, true);
-						curMenu = node.children[0];
-					}
-				} else {
-					zTree_Menu.expandNode(node);
-				}
-			}
-			return !node.isParent;
-		}
-		function onClick(e, treeId, node) {
-			alert("Do what you want to do!");
-		}
+		             ];
 
 		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-			curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
-			zTree_Menu.selectNode(curMenu);
-			var a = $("#" + zTree_Menu.getNodes()[0].tId + "_a");
-			a.addClass("cur");
+			 demoContent._init() ;		
 		});
 	</SCRIPT>
-	<style type="text/css">
-.ztree li a.level0 {width:350px;height: 40px; text-align: center; display:block; background-color: #0B61A4; border:1px silver solid;}
-.ztree li a.level0.cur {background-color: #66A3D2; }
-.ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:25px; font-weight: bold;word-spacing: 2px;}
-.ztree li a.level0 span.button {	float:right; margin-left: 10px; visibility: visible;display:none;}
-.ztree li span.button.switch.level0 {display:none;}
-	</style>
- </HEAD>
+</HEAD>
 
 <BODY>
-<div class="content_wrap">
+<!-- <div class="content_wrap">
 	<div class="zTreeDemoBackground left">
 		<ul id="treeDemo" class="ztree"></ul>
 	</div>
+</div> -->
+<div class="content_wrap">
+				<div id="demo_menu" >
+					<ul id="menuTree" class="ztree"></ul>
 </div>
+</div> 
+				
 </BODY>
 
 </HTML>
