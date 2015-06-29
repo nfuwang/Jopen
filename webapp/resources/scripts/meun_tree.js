@@ -1,21 +1,22 @@
-var demoContent = {
-	zTree_Menu: null,
-	curMenu: null,
-	curDemo: null,
-	demoIframe: null,
-	_init: function() {
-		this.demoIframe = $("#demoIframe");
-		var a = {
+//KVM host 图标URL
+var host_KVM_img = "../resources/images/tree/rs_hst_kvm.png";
+//Linux guest 图标URL
+var guest_lin_img = "../resources/images/tree/rs_gst_lin.png";
+//Windows guest 图标URL
+var guest_win_img = "../resources/images/tree/rs_gst_win.png";
+
+		
+		var curMenu = null, zTree_Menu = null;
+		var setting = {
 			view: {
-				showIcon: this.showIcon,
-				showLine: !1,
-				selectedMulti: !1,
-				dblClickExpand: !1
+				showLine: false, 
+				showIcon: this.isNotBlank,  //如果节点属性为blank，则不显示图标
+				selectedMulti: false,
+				dblClickExpand: false
 			},
 			data: {
 				simpleData: {
-					enable: !0,
-					rootPId: ""
+					enable: true
 				}
 			},
 			callback: {
@@ -24,55 +25,101 @@ var demoContent = {
 				onClick: this.onClick
 			}
 		};
-		demoContent.zTree_Menu = $.fn.zTree.init($("#menuTree"), $.fn.zTree._z.tools.clone(a), menu_nodes);
-		this.bindEvent();
-		demoContent.showContent()
-	},
-	bindEvent: function() {
-		this.demoIframe.bind("load", demoContent.onload)
-	},
-	showIcon: function(a, b) {
-		return !!b.iconSkin
-	},
-	showContent: function(a) {
-		var b = window.location.href,
-			c = window.location.hash;
-		b.indexOf("#") > -1 && (b = b.substring(0, b.indexOf("#")), c = c.substr(2));
-		a || (!a && c.length > 0 && (a = demoContent.zTree_Menu.getNodeByParam("id", c)), a || (a = demoContent.zTree_Menu.getNodes()[0].children[0]), demoContent.zTree_Menu.selectNode(a));
-		if (a) demoContent.curMenu = a.getParentNode(), demoContent.demoIframe.attr("src", "top.html"), window.location.href = b + "#_" + a.id
-	},
-	onload: function() {
-		demoContent.demoIframe.fadeIn("fast");
-		var a = demoContent.demoIframe.contents().find("body").get(0).scrollHeight,
-			b = demoContent.demoIframe.contents().find("html").get(0).scrollHeight,
-			c = Math.max(a, b),
-			a = Math.min(a, b),
-			c = demoContent.demoIframe.height() >= c ? a : c;
-		c < 530 && (c = 530);
-		ie ? demoContent.demoIframe.height(c) : demoContent.demoIframe.animate({
-			height: c
-		}, {
-			duration: "normal",
-			easing: "swing",
-			complete: null
-		})
-	},
-	onNodeCreated: function(a, b, c) {
-		var d = $("#" + c.tId + "_a");
-		c.blank && d.css({
-			cursor: "default"
+
+		var zNodes =[
+			{ id:1, pId:0, name:"系统信息", open:true},
+			{ id:11, pId:1, name:"子菜单 1-1"},
+			{ id:12, pId:1, name:"子菜单 1-2"},
+
+			{id:13, pId:1, name:"", blank:true},
+         	{id:14, pId:1, name:"", blank:true},
+         	{id:15, pId:1, name:"", blank:true},
+         	{id:16, pId:1, name:"", blank:true},
+			{ id:2, pId:0, name:"虚拟机管理"},
+			{ id:21, pId:2, name:"子菜单 2-1",open:true,icon:host_KVM_img},
+			{ id:211, pId:21, name:"叶子节点 2-1-1"},
+			{ id:212, pId:21, name:"叶子节点 2-1-2"},
+			{ id:213, pId:21, name:"叶子节点 2-1-3"},
+			{ id:214, pId:21, name:"叶子节点 2-1-4"},
+			{ id:22, pId:2, name:"子菜单 2-2",open:true},
+			{ id:221, pId:22, name:"叶子节点 2-2-1"},
+			{ id:222, pId:22, name:"叶子节点 2-2-2"},
+			{ id:223, pId:22, name:"叶子节点 2-2-3"},
+			{ id:224, pId:22, name:"叶子节点 2-2-4"},
+			{ id:3, pId:0, name:"系统管理"},
+			{ id:31, pId:3, name:"子菜单 3-1"},
+			{ id:311, pId:31, name:"叶子节点 3-1-1"},
+			{ id:312, pId:31, name:"叶子节点 3-1-2"},
+			{ id:313, pId:31, name:"叶子节点 3-1-3"},
+			{ id:314, pId:31, name:"叶子节点 3-1-4"},
+			{ id:32, pId:3, name:"子菜单 3-2"},
+			{ id:321, pId:32, name:"叶子节点 3-2-1"},
+			{ id:322, pId:32, name:"叶子节点 3-2-2"},
+			{ id:323, pId:32, name:"叶子节点 3-2-3"},
+			{ id:324, pId:32, name:"叶子节点 3-2-4"}			
+		];
+
+		function beforeClick(treeId, node) {
+			if (node.isParent) {
+				if (node.level === 0) {
+					var pNode = curMenu;
+					while (pNode && pNode.level !==0) {
+						pNode = pNode.getParentNode();
+					}
+					if (pNode !== node) {
+						var a = $("#" + pNode.tId + "_a");
+						a.removeClass("cur");
+						zTree_Menu.expandNode(pNode, false);
+					}
+					a = $("#" + node.tId + "_a");
+					a.addClass("cur");
+
+					var isOpen = false;
+					for (var i=0,l=node.children.length; i<l; i++) {
+						if(node.children[i].open) {
+							isOpen = true;
+							break;
+						}
+					}
+					if (isOpen) {
+						zTree_Menu.expandNode(node, true);
+						curMenu = node;
+					} else {
+						zTree_Menu.expandNode(node.children[0].isParent?node.children[0]:node, true);
+						curMenu = node.children[0];
+					}
+				} else {
+					zTree_Menu.expandNode(node);
+				}
+			}
+			//return !node.isParent &&  !node.blank && node.level != 0 ;
+			return  !node.blank && node.level != 0 ;
+		}
+		function onClick(e, treeId, node) {
+			alert(node.id);
+		}
+        
+		function onNodeCreated(a, b, c) {
+		/*	var d = $("#" + c.tId + "_a");
+			//c.blank && alert(c.tId);
+			c.blank && d.css({
+				cursor: "default"
+			});
+			d.hover(function() {
+				demoContent.curMenu != c && d.addClass("cur")
+			}, function() {
+				demoContent.curMenu != c && d.removeClass("cur")
+			});*/
+		}
+			
+		function isNotBlank(a, b) {
+			return !b.blank
+		}
+		$(document).ready(function(){
+			$.fn.zTree.init($("#meun_tree"), setting, zNodes);
+			zTree_Menu = $.fn.zTree.getZTreeObj("meun_tree");
+			curMenu = zTree_Menu.getNodes()[0].children[0];
+			zTree_Menu.selectNode(curMenu);
+			var a = $("#" + zTree_Menu.getNodes()[0].tId + "_a");
+			a.addClass("cur");
 		});
-		d.hover(function() {
-			demoContent.curMenu != c && d.addClass("cur")
-		}, function() {
-			demoContent.curMenu != c && d.removeClass("cur")
-		})
-	},
-	beforeClick: function(a, b) {
-		if (b.level == 0 && demoContent.curMenu != b) demoContent.zTree_Menu.expandNode(b, !0), demoContent.zTree_Menu.expandNode(demoContent.curMenu, !1), $("#" + demoContent.curMenu.tId + "_a").removeClass("cur"), $("#" + b.tId + "_a").addClass("cur"), demoContent.curMenu = b;
-		return !b.blank && b.level != 0 && !demoContent.zTree_Menu.isSelectedNode(b)
-	},
-	onClick: function(a, b, c) {
-		demoContent.showContent(c)
-	}
-};
