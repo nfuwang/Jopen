@@ -38,10 +38,44 @@ zTree Style
 	display: none;
 }
 
+
+
 .ztree li span.button.switch.level0 {
 	display: none;
 }
 
+/* 
+.ztree li a.level1 {
+	width: 65%;
+	height: 20px;
+	text-align: center;
+	display: block;
+	background-color: #408080;
+	border: 2px silver solid;
+	padding: 0,0,0,0px;
+	Ô²½Ç
+	border-radius: 5px;
+}
+
+.ztree li a.level1.cur {
+	background-color: #66A3D2;
+}
+
+.ztree li a.level1 span {
+	display: block;
+	color: white;
+	padding-top: 3px;
+	font-weight: bold;
+	word-spacing: 2px;
+}
+
+.ztree li a.level1 span.button {
+	float: right;
+	margin-left: 10px;
+	visibility: visible;
+	display: none;
+}
+ */
 /* .ztree li a.level1{
 	width: 50%;
 	height: 15px;

@@ -13,7 +13,7 @@
 	<frameset cols="350,1*" >
 		<frame src="tree.html" name="tree" scrolling="NO"
 			marginwidth="0" marginheight="0"  style="BORDER-RIGHT: #999999 1px dashed">
-		<frame src="welcome.html" name="content">
+		<frame src="welcome.html" name="content"  id="content">
 	</frameset>
 </frameset>
 

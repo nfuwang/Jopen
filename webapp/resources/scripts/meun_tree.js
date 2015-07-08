@@ -28,8 +28,8 @@ var guest_win_img = "../resources/images/tree/rs_gst_win.png";
 
 		var zNodes =[
 			{ id:1, pId:0, name:"系统信息", open:true},
-			{ id:11, pId:1, name:"子菜单 1-1"},
-			{ id:12, pId:1, name:"子菜单 1-2"},
+			{ id:11, pId:1, name:"资源使用"},
+			{ id:12, pId:1, name:"资源分配"},
 
 			{id:13, pId:1, name:"", blank:true},
          	{id:14, pId:1, name:"", blank:true},
@@ -96,7 +96,10 @@ var guest_win_img = "../resources/images/tree/rs_gst_win.png";
 			return  !node.blank && node.level != 0 ;
 		}
 		function onClick(e, treeId, node) {
-			alert(node.id);
+			//设置右侧页面
+			window.parent.document.getElementById('content').src='';
+			//$('#content').location();
+			//alert($('#content').text());
 		}
         
 		function onNodeCreated(a, b, c) {
